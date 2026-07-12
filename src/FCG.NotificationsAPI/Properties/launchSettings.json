@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "FCG.NotificationsAPI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "health",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7084;http://localhost:5084"
+    }
+  }
+}
