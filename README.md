@@ -20,9 +20,11 @@ Microsserviço responsável por **simular o envio de e-mails** da plataforma FIA
 | Mensageria | MassTransit + RabbitMQ |
 | Logs | Serilog (Console) |
 
-## Sem banco de dados
+## NoSQL (MongoDB)
 
-Este serviço é **stateless** — não persiste nenhuma informação. Apenas consome eventos e registra logs.
+O serviço utiliza **MongoDB** (banco `fcg_notifications`) para registrar o histórico de
+notificações enviadas e para controle de idempotência no consumo de eventos (evita
+reenvio de e-mail duplicado em caso de redelivery pelo RabbitMQ/MassTransit).
 
 ## Endpoints
 
@@ -38,11 +40,16 @@ Este serviço é **stateless** — não persiste nenhuma informação. Apenas co
 | `RabbitMQ__VirtualHost` | Virtual host | `/` |
 | `RabbitMQ__Username` | Usuário RabbitMQ | `guest` |
 | `RabbitMQ__Password` | Senha RabbitMQ | `guest` |
+| `Mongo__ConnectionString` | String de conexão MongoDB | `mongodb://mongo:27017` |
+| `Mongo__Database` | Banco de dados MongoDB | `fcg_notifications` |
 
 ## Executar com Docker Compose
 
 ```bash
 docker compose up -d --build
+
+# Validar o MongoDB
+mongosh mongodb://localhost:27017/fcg_notifications --eval "db.getCollectionNames()"
 ```
 
 ## Executar localmente
@@ -56,6 +63,7 @@ dotnet run --project src/FCG.NotificationsAPI
 
 ```bash
 kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/mongo.yaml
 kubectl apply -f k8s/
 kubectl get pods -n fcg
 # Ver logs das notificações em tempo real:

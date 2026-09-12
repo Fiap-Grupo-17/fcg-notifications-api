@@ -13,6 +13,19 @@ services:
       timeout: 5s
       retries: 5
 
+  mongo:
+    image: mongo:7
+    container_name: fcg-mongo-notifications
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata_notifications:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   notifications-api:
     build: .
     ports:
@@ -21,6 +34,13 @@ services:
       RabbitMQ__Host: rabbitmq
       RabbitMQ__Username: guest
       RabbitMQ__Password: guest
+      Mongo__ConnectionString: "mongodb://mongo:27017"
+      Mongo__Database: "fcg_notifications"
     depends_on:
       rabbitmq:
         condition: service_healthy
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongodata_notifications:
