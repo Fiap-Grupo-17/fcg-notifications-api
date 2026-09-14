@@ -95,4 +95,5 @@ record PaymentProcessedEvent(Guid OrderId, Guid UserId, Guid GameId, string Game
 ## Grupo 17 — Pos-Tech FIAP
 - Letícia Lopes Ribeiro Vasconcelos
 - Marcelo Henrique Cornelis Rei
-- Vinícius Calixto Real
+- Washington Santana dos Santos
+- Raul Hentz Rodrigues
